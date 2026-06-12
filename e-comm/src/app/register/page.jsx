@@ -13,28 +13,33 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import axios from "axios";
+import { api } from "@/config/api";
 
 export default function RegisterForm() {
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    try {
+      const res = await api.post("/api/auth/register", data);
+      console.log("res", res);
+      reset()
+    } catch (error) {
+      console.log("error in reg api", error);
+    }
   };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-100 px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-3xl font-bold">
-            Create Account
-          </CardTitle>
-          <CardDescription>
-            Register to continue
-          </CardDescription>
+          <CardTitle className="text-3xl font-bold">Create Account</CardTitle>
+          <CardDescription>Register to continue</CardDescription>
         </CardHeader>
 
         <CardContent>
@@ -48,9 +53,7 @@ export default function RegisterForm() {
                 })}
               />
               {errors.name && (
-                <p className="text-sm text-red-500">
-                  {errors.name.message}
-                </p>
+                <p className="text-sm text-red-500">{errors.name.message}</p>
               )}
             </div>
 
@@ -64,9 +67,7 @@ export default function RegisterForm() {
                 })}
               />
               {errors.email && (
-                <p className="text-sm text-red-500">
-                  {errors.email.message}
-                </p>
+                <p className="text-sm text-red-500">{errors.email.message}</p>
               )}
             </div>
 

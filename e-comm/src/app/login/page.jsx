@@ -13,28 +13,38 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { api } from "@/config/api";
+import { useRouter } from "next/navigation";
+import { AuthContext } from "@/context/AuthContext";
 
-export default function LoginForm() {
+const LoginForm = () => {
+  const router = useRouter();
+
+  let { user, hydrateUser } = AuthContext();
+
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    try {
+      const res = await api.post("/api/auth/login", data);
+      console.log("res from login", res);
+      hydrateUser();
+    } catch (error) {
+      console.log("error in login api", error);
+    }
   };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-100 px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-3xl font-bold">
-            Welcome Back
-          </CardTitle>
-          <CardDescription>
-            Login to your account
-          </CardDescription>
+          <CardTitle className="text-3xl font-bold">Welcome Back</CardTitle>
+          <CardDescription>Login to your account</CardDescription>
         </CardHeader>
 
         <CardContent>
@@ -49,9 +59,7 @@ export default function LoginForm() {
                 })}
               />
               {errors.email && (
-                <p className="text-sm text-red-500">
-                  {errors.email.message}
-                </p>
+                <p className="text-sm text-red-500">{errors.email.message}</p>
               )}
             </div>
 
@@ -89,4 +97,6 @@ export default function LoginForm() {
       </Card>
     </div>
   );
-}
+};
+
+export default LoginForm;
