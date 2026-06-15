@@ -3,8 +3,9 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { verifyToken } from "./jwt";
 import UserModel from "@/models/user.model";
+import { JWTPayload } from "@/types/user.types";
 
-export const getMe = async (): Promise<Object> => {
+export const getMe = async (): Promise<Object | any> => {
   const cookieStore = await cookies();
 
   const token = cookieStore.get("token")?.value;
@@ -20,7 +21,7 @@ export const getMe = async (): Promise<Object> => {
       }
     );
 
-  const decode = verifyToken(token);
+  const decode = verifyToken(token) as JWTPayload;
 
   if (!decode)
     return NextResponse.json<IApiResponse>(
