@@ -44,7 +44,7 @@ export async function GET(
         message: "Resume fetched",
         data: resume,
       },
-      { status: 500 }
+      { status: 200 }
     );
   } catch (error) {
     return NextResponse.json<IApiResponse>(
@@ -108,9 +108,10 @@ export async function PATCH(
         message: "Resume updated",
         data: updatedResume,
       },
-      { status: 500 }
+      { status: 200 }
     );
   } catch (error) {
+    console.log("error in update api", error);
     return NextResponse.json<IApiResponse>(
       {
         success: false,

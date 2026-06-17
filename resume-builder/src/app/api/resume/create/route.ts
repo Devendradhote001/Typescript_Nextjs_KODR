@@ -4,11 +4,13 @@ import ResumeModel from "@/models/resume.model";
 import { IApiResponse } from "@/types/apiResponse.types";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
     await connectDB();
 
     const user = await getMe();
+
+    console.log("here is user id", user);
 
     if (!user)
       return NextResponse.json<IApiResponse>(
@@ -20,7 +22,7 @@ export async function GET(req: NextRequest) {
       );
 
     const newResume = await ResumeModel.create({
-      userId: user._id,
+      user_id: user._id,
     });
 
     if (!newResume)
@@ -36,10 +38,12 @@ export async function GET(req: NextRequest) {
       {
         success: true,
         message: "Resume created",
+        data: newResume,
       },
-      { status: 500 }
+      { status: 201 }
     );
   } catch (error) {
+    console.log("error in create resume", error);
     return NextResponse.json<IApiResponse>(
       {
         success: false,

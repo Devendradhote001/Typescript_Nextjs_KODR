@@ -35,7 +35,7 @@ export interface IExperience {
 }
 
 export interface IResume {
-  _id?: ObjectId;
+  _id?: string;
   user_id: ObjectId;
   title: string;
   summary: string;
